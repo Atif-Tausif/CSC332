@@ -16,18 +16,6 @@ test: $(OUT)
 	chmod +x $(TEST)
 	./$(TEST)
 
-install: $(OUT) $(MAN)
-	mkdir -p /usr/local/bin
-	mkdir -p /usr/local/share/man/man1
-	cp $(OUT) /usr/local/bin/filediffadvanced
-	cp $(MAN) /usr/local/share/man/man1/$(MAN)
-	mandb
-
-uninstall:
-	rm -f /usr/local/bin/filediffadvanced
-	rm -f /usr/local/share/man/man1/$(MAN)
-	mandb
-
 clean:
 	rm -rf build/*
 
