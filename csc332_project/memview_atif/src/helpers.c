@@ -55,26 +55,20 @@ int read_process_maps(int process_id) {
         return -1;
     }
     
-    struct stat file_info;
-    if (fstat(file_desc, &file_info) < 0) {
-        fprintf(stderr, "Couldn't get file info for %s: %s\n", file_path, strerror(errno));
-        close(file_desc);
-        return -1;
-    }
-    
-    size_t file_size = file_info.st_size;
-    char *mapped_data = mmap(NULL, file_size, PROT_READ, MAP_PRIVATE, file_desc, 0);
-    
-    if (mapped_data == MAP_FAILED) {
-        fprintf(stderr, "Memory mapping failed for %s: %s\n", file_path, strerror(errno));
-        close(file_desc);
-        return -1;
-    }
-    
     printf("\n---- Memory Map Layout (PID: %d) ----\n", process_id);
-    write(STDOUT_FILENO, mapped_data, file_size);
     
-    munmap(mapped_data, file_size);
+    char buffer[4096];
+    ssize_t bytes_read;
+    while ((bytes_read = read(file_desc, buffer, sizeof(buffer))) > 0) {
+        write(STDOUT_FILENO, buffer, bytes_read);
+    }
+    
+    if (bytes_read < 0) {
+        fprintf(stderr, "Failed to read %s: %s\n", file_path, strerror(errno));
+        close(file_desc);
+        return -1;
+    }
+    
     close(file_desc);
     return 0;
 }

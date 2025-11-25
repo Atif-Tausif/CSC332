@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     }
 
     if ((display_memory_map || display_status) && process_id < 0) {
-        fprintf(stderr, "Hey, you need to specify a PID with -p when using -m\n");
+        fprintf(stderr, "You need to specify a PID with -p when using -m\n");
         return 1;
     }
 
